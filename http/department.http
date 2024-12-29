@@ -1,0 +1,35 @@
+@baseUrl = http://localhost:3000
+@departmentId = your-department-id-here
+@authToken = your-token-here
+
+### Create Department (ADMIN only)
+POST {{baseUrl}}/departments
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "departmentName": "IT Department",
+    "description": "Information Technology Department"
+}
+
+### Get All Departments (ADMIN) or Get Own Department (MANAGER)
+GET {{baseUrl}}/departments
+Authorization: Bearer {{authToken}}
+
+### Get Department by ID (ADMIN only)
+GET {{baseUrl}}/departments/{{departmentId}}
+Authorization: Bearer {{authToken}}
+
+### Update Department (ADMIN only)
+PATCH {{baseUrl}}/departments/{{departmentId}}
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "departmentName": "Updated IT Department",
+    "description": "Updated Information Technology Department"
+}
+
+### Delete Department (ADMIN only)
+DELETE {{baseUrl}}/departments/{{departmentId}}
+Authorization: Bearer {{authToken}}

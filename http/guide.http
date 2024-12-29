@@ -1,0 +1,91 @@
+@baseUrl = http://localhost:3000
+
+### 1. Tạo tài khoản Admin
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+    "fullName": "Admin User",
+    "email": "admin@example.com",
+    "password": "Admin123!",
+    "phoneNumber": "+84999999999",
+    "birthDate": "1990-01-01",
+    "isAdmin": true
+}
+
+### 2. Đăng nhập với tài khoản Admin để lấy token
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+    "employeeCode": "EMP0001",
+    "password": "Admin123!"
+}
+
+### Lưu token vào biến môi trường
+@authToken = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1YjgzNTJkMS02MWQ4LTQyZmUtYTRmYi1mMjQyNWUyZjYzNjgiLCJlbXBsb3llZUNvZGUiOiJFTVAwMDAxIiwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNzM0MDE5NjcwLCJleHAiOjE3MzQxMDYwNzB9.lYZusFjEM2-hk4N9FAkd__3IVFk0dMWMuqcHM789v4E
+
+### 3. Tạo Phòng Ban
+POST {{baseUrl}}/departments
+Authorization: {{authToken}}
+Content-Type: application/json
+
+{
+    "departmentCode": "HR001",          
+    "departmentName": "Human Resources", 
+    "description": "HR Department"      
+}
+
+### 4. Xem danh sách phòng ban (để lấy departmentId)
+GET {{baseUrl}}/departments
+Authorization: {{authToken}}
+
+### 5. Tạo Nhân viên (thay departmentId bằng ID thực từ bước 4)
+POST {{baseUrl}}/employees
+Authorization: {{authToken}}
+Content-Type: application/json
+
+{
+    "fullName": "John Employee",
+    "email": "john@example.com",
+    "password": "John123!",
+    "phoneNumber": "+84987654321",
+    "birthDate": "1995-01-01",
+    "departmentId": "5d664415-8de3-4c30-81e9-166fc79b3fc3",
+    "isAdmin": false
+}
+
+### 6. Tạo ca làm việc
+POST {{baseUrl}}/shifts
+Authorization: {{authToken}}
+Content-Type: application/json
+
+{
+    "name": "Morning Shift",
+    "startTime": "08:00",
+    "endTime": "17:00",
+    "description": "Standard morning shift"
+}
+
+### 7. Xem danh sách ca làm việc (để lấy shiftId)
+GET {{baseUrl}}/shifts
+Authorization: {{authToken}}
+
+### 8. Check-in cho nhân viên (thay employeeId và shiftId)
+POST {{baseUrl}}/timekeeping/check-in
+Authorization: {{authToken}}
+Content-Type: application/json
+
+{
+    "employeeId": "employee_id_here",
+    "shiftId": "shift_id_here",
+    "checkInTime": "08:00"
+}
+
+### 9. Xem lịch sử chấm công của nhân viên
+GET {{baseUrl}}/timekeeping/employee/{{employeeId}}?startDate=2024-01-01&endDate=2024-12-31
+Authorization: {{authToken}}
+
+### 10. Tạo QR Code cho việc chấm công
+GET {{baseUrl}}/qrcode/generate?employeeId={{employeeId}}&shiftId={{shiftId}}
+Authorization: {{authToken}}

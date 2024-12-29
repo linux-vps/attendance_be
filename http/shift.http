@@ -1,0 +1,48 @@
+@baseUrl = http://localhost:3000
+@shiftId = your-shift-id-here
+@authToken = your-token-here
+
+### Create Shift (ADMIN or MANAGER for their department)
+POST {{baseUrl}}/shifts
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "name": "Morning Shift",
+    "startTime": "09:00",
+    "endTime": "17:00",
+    "description": "Regular morning shift",
+    "departmentId": "department-id-here"
+}
+
+### Get All Shifts (ADMIN) or Department Shifts (MANAGER)
+GET {{baseUrl}}/shifts
+Authorization: Bearer {{authToken}}
+
+### Get Shift by ID (ADMIN or MANAGER for their department)
+GET {{baseUrl}}/shifts/{{shiftId}}
+Authorization: Bearer {{authToken}}
+
+### Update Shift (ADMIN or MANAGER for their department)
+PATCH {{baseUrl}}/shifts/{{shiftId}}
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "name": "Updated Morning Shift",
+    "startTime": "08:30",
+    "endTime": "16:30",
+    "description": "Updated regular morning shift"
+}
+
+### Delete Shift (ADMIN or MANAGER for their department)
+DELETE {{baseUrl}}/shifts/{{shiftId}}
+Authorization: Bearer {{authToken}}
+
+### Get Active Shifts (All authenticated users)
+GET {{baseUrl}}/shifts/active
+Authorization: Bearer {{authToken}}
+
+### Get Shifts by Time Range (All authenticated users)
+GET {{baseUrl}}/shifts/range?startTime=09:00&endTime=17:00
+Authorization: Bearer {{authToken}}

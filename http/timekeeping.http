@@ -1,0 +1,50 @@
+@baseUrl = http://localhost:3000
+@timekeepingId = your-timekeeping-id-here
+@employeeId = your-employee-id-here
+@departmentId = your-department-id-here
+@shiftId = your-shift-id-here
+@authToken = your-token-here
+
+### Check In (USER, MANAGER, ADMIN)
+POST {{baseUrl}}/timekeeping/check-in
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "employeeId": "{{employeeId}}",
+    "shiftId": "{{shiftId}}",
+    "checkInTime": "09:00"
+}
+
+### Check Out (USER, MANAGER, ADMIN)
+POST {{baseUrl}}/timekeeping/check-out/{{timekeepingId}}
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "checkOutTime": "17:00"
+}
+
+### Get Employee Timekeeping Records (USER: own records, MANAGER: department employees, ADMIN: all)
+GET {{baseUrl}}/timekeeping/employee/{{employeeId}}?startDate=2024-01-01&endDate=2024-12-31
+Authorization: Bearer {{authToken}}
+
+### Get Department Timekeeping Records (MANAGER: own department, ADMIN: all)
+GET {{baseUrl}}/timekeeping/department/{{departmentId}}?startDate=2024-01-01&endDate=2024-12-31
+Authorization: Bearer {{authToken}}
+
+### Get Today's Timekeeping Records (MANAGER: department records, ADMIN: all)
+GET {{baseUrl}}/timekeeping/today
+Authorization: Bearer {{authToken}}
+
+### Get Late Check-ins (MANAGER: department records, ADMIN: all)
+GET {{baseUrl}}/timekeeping/late?date=2024-01-01
+Authorization: Bearer {{authToken}}
+
+### Get Early Leave Records (MANAGER: department records, ADMIN: all)
+GET {{baseUrl}}/timekeeping/early-leave?date=2024-01-01
+Authorization: Bearer {{authToken}}
+
+### Get Monthly Report (MANAGER: department report, ADMIN: all departments)
+GET {{baseUrl}}/timekeeping/report/monthly?year=2024&month=1&departmentId={{departmentId}}
+Authorization: Bearer {{authToken}}

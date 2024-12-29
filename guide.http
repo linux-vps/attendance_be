@@ -1,0 +1,229 @@
+@baseUrl = http://localhost:3000
+### Lưu token vào biến môi trường
+@authToken = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3OGJkY2MzOC04ODRiLTQ4MzMtOGY3MS00MWQzNzQzZjQwY2MiLCJyb2xlIjoidXNlciIsImRlcGFydG1lbnRJZCI6ImUxOWI1OTllLWM0ZTktNDk3NS1iN2UwLWUyYzhlZDVmODdmNSIsImlhdCI6MTczNDA3MjUzOCwiZXhwIjoxNzM0MTU4OTM4fQ.3rpm0Ez80J1Xk7lmjwxQv8wcAJr2GNDrC7mrK8lCtOo
+
+
+### 1. Tạo tài khoản Admin 
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+    "fullName": "Admin User",
+    "email": "admin@example.com",
+    "password": "Admin123!",
+    "phoneNumber": "+84999999999",
+    "birthDate": "1990-01-01",
+    "role": "admin"
+}
+
+### 2. Tạo tài khoản Quản lý (dùng token của tài khoản Admin)
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+    "fullName": "John Manager",
+    "email": "john.manager1@example.com",
+    "password": "John123!",
+    "phoneNumber": "+84987654321",
+    "birthDate": "1995-01-01",
+    "departmentId": "39643a9e-516f-4e15-9e18-0a1adc0618e1",
+    "role": "manager" 
+}
+
+### 3. Đăng nhập với tài khoản Quản lý để lấy token
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+    "email":"john.manager1@example.com",
+    "password":"John123!"
+}
+
+### 4. Đăng nhập tài khoản nhân viên
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+    "email":"john1@example.com",
+    "password":"John123!"
+}
+
+### 3. Đăng nhập với tài khoản Admin để lấy token
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+    "email": "admin@example.com",
+    "password": "Admin123!"
+}
+
+### 4. Tạo Phòng Ban (Chỉ Admin)
+POST {{baseUrl}}/departments
+Authorization: {{authToken}}
+Content-Type: application/json
+
+{    
+    "departmentName": "Human Resources", 
+    "description": "HR Department"      
+}
+
+### 5. Xem danh sách phòng ban (để lấy departmentId)
+GET {{baseUrl}}/departments
+Authorization: {{authToken}}
+
+### 6. Tạo quản lý mới (Chỉ Admin)
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+    "fullName": "John Manager",
+    "email": "john.manager21@example.com",
+    "password": "John123!",
+    "phoneNumber": "+84987654321",
+    "birthDate": "1995-01-01",
+    "departmentId": "e19b599e-c4e9-4975-b7e0-e2c8ed5f87f5",
+    "role": "manager" 
+}
+
+### 10. Tạo Nhân viên (Quản lý tạo được nhân viên trong phòng ban mình quản lý)
+POST {{baseUrl}}/employees
+Authorization: {{authToken}}
+Content-Type: application/json
+
+{
+    "fullName": "John Employee",
+    "email": "john1@example.com",
+    "password": "John123!",
+    "phoneNumber": "+84987654321",
+    "birthDate": "1995-01-01",
+    "role": "user"
+}
+
+### 11. Xem danh sách nhân viên
+GET {{baseUrl}}/employees
+Authorization: {{authToken}}
+
+### 12. Xem thông tin chi tiết nhân viên không phân quyền
+GET {{baseUrl}}/employees/78bdcc38-884b-4833-8f71-41d3743f40cc
+Authorization: {{authToken}}
+
+### 13. Cập nhật thông tin nhân viên(admin/manager)
+PATCH {{baseUrl}}/employees/f08faf56-40c3-46e5-81e4-13d4f8119d2c
+Authorization: {{authToken}}
+Content-Type: application/json
+
+{
+    "fullName": "Updated Name",
+    "phoneNumber": "+84987654322",
+    "birthDate": "1995-01-02"
+}
+
+### 7. Tạo Ca Làm Việc (Admin hoặc Manager)
+POST {{baseUrl}}/shifts
+Authorization: {{authToken}}
+Content-Type: application/json
+
+{
+    "shiftName": "Ca Sáng",
+    "startTime": "08:00",
+    "endTime": "12:00",
+    "description": "Ca làm việc buổi sáng",
+    "departmentId": "e19b599e-c4e9-4975-b7e0-e2c8ed5f87f5"
+}
+
+### 8. Xem Danh Sách Ca Làm Việc
+GET {{baseUrl}}/shifts
+Authorization: {{authToken}}
+
+### 9. Xem Chi Tiết Ca Làm Việc
+GET {{baseUrl}}/shifts/91191868-8c1a-4bd5-9b52-3f81f0f54077
+Authorization: {{authToken}}
+
+### 16. Chấm công vào ca
+POST {{baseUrl}}/timekeeping/check-in
+Authorization: {{authToken}}
+Content-Type: application/json
+
+{
+    "employeeId": "78bdcc38-884b-4833-8f71-41d3743f40cc",
+    "checkInTime": "09:00",
+    "shiftId": "91191868-8c1a-4bd5-9b52-3f81f0f54077",
+    "note": "Chấm công với môi trường"
+}
+
+### 17. Chấm công ra ca
+POST {{baseUrl}}/timekeeping/check-out/19a83e20-f29c-42fc-b394-f518da7d634b
+Authorization: {{authToken}}
+Content-Type: application/json
+
+{
+    "checkOutTime": "17:00"
+}
+
+### 18. Xem lịch sử chấm công của bản thân ( Nhân viên )
+GET {{baseUrl}}/timekeeping/history
+Authorization: {{authToken}}
+
+### 19. Xem lịch sử chấm công của các nhân viên trong phòng ban (Chỉ Manager)
+GET {{baseUrl}}/timekeeping/department
+Authorization: {{authToken}}
+
+### 20. Xem lịch sử chấm công của một nhân viên cụ thể (Manager)
+GET {{baseUrl}}/timekeeping/employee/78bdcc38-884b-4833-8f71-41d3743f40cc
+Authorization: {{authToken}}
+
+### 21. Tạo mã QR điểm danh (Chỉ Manager)
+POST {{baseUrl}}/qrcode/generate
+Authorization: {{authToken}}
+Content-Type: application/json
+
+{
+    "departmentId": "39643a9e-516f-4e15-9e18-0a1adc0618e1",
+    "type": "checkin"
+}
+
+### 22. Điểm danh vào ca bằng mã QR
+POST {{baseUrl}}/timekeeping/checkin/qr?token={{qrToken}}
+Authorization: {{authToken}}
+
+### 23. Điểm danh ra ca bằng mã QR
+POST {{baseUrl}}/timekeeping/checkout/qr?token={{qrToken}}
+Authorization: {{authToken}}
+
+### 24. Thống kê chấm công theo tháng của phòng ban (Manager)
+GET {{baseUrl}}/timekeeping/statistics/department?month=12&year=2023
+Authorization: {{authToken}}
+
+### 25. Thống kê chấm công theo tháng của nhân viên
+GET {{baseUrl}}/timekeeping/statistics/employee/:employeeId?month=12&year=2023
+Authorization: {{authToken}}
+
+### 26. Xóa nhân viên (Chỉ Admin)
+DELETE {{baseUrl}}/employees/:employeeId
+Authorization: {{authToken}}
+
+### 27. Cập nhật thông tin phòng ban
+PATCH {{baseUrl}}/departments/:departmentId
+Authorization: {{authToken}}
+Content-Type: application/json
+
+{
+    "departmentName": "Updated HR Department",
+    "description": "Updated description"
+}
+
+### 28. Xóa phòng ban (Chỉ Admin)
+DELETE {{baseUrl}}/departments/:departmentId
+Authorization: {{authToken}}
+
+### 29. Đổi mật khẩu
+PATCH {{baseUrl}}/auth/change-password
+Authorization: {{authToken}}
+Content-Type: application/json
+
+{
+    "currentPassword": "OldPass123!",
+    "newPassword": "NewPass123!"
+}
+
+### 30. Các thao tác tiếp theo...

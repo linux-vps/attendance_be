@@ -1,0 +1,20 @@
+@baseUrl = http://localhost:3000
+@shiftId = your-shift-id-here
+
+### Generate QR Code for Shift
+GET {{baseUrl}}/qrcode/generate/shift/{{shiftId}}
+
+### Validate QR Code
+POST {{baseUrl}}/qrcode/validate
+Content-Type: application/json
+
+{
+    "qrCode": "your-qr-code-data-here",
+    "employeeId": "your-employee-id-here"
+}
+
+### Get QR Code History
+GET {{baseUrl}}/qrcode/history/shift/{{shiftId}}
+
+### Get Active QR Codes
+GET {{baseUrl}}/qrcode/active

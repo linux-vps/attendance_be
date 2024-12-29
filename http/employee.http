@@ -1,0 +1,49 @@
+@baseUrl = http://localhost:3000
+@employeeId = your-employee-id-here
+@departmentId = your-department-id-here
+
+### Create Employee
+POST {{baseUrl}}/employees
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "fullName": "John Employee",
+    "email": "john@example.com",
+    "password": "John123!",
+    "phoneNumber": "+84987654321",
+    "birthDate": "1995-01-01",
+    "departmentId": "HR001",
+    "role": "USER"
+}
+
+### Get All Employees
+GET {{baseUrl}}/employees
+
+### Get Employee by ID
+GET {{baseUrl}}/employees/{{employeeId}}
+
+### Get Employees by Department
+GET {{baseUrl}}/employees/department/{{departmentId}}
+
+### Update Employee
+PATCH {{baseUrl}}/employees/{{employeeId}}
+Content-Type: application/json
+
+{
+    "firstName": "John Updated",
+    "lastName": "Doe Updated",
+    "position": "Senior Software Engineer"
+}
+
+### Delete Employee
+DELETE {{baseUrl}}/employees/{{employeeId}}
+
+### Change Employee Password
+PATCH {{baseUrl}}/employees/{{employeeId}}/change-password
+Content-Type: application/json
+
+{
+    "currentPassword": "oldPassword123",
+    "newPassword": "newPassword123"
+}

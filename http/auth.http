@@ -1,0 +1,38 @@
+@baseUrl = http://localhost:3000
+
+### Register New User
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+    "fullName": "Admin User",
+    "email": "admin@example.com",
+    "password": "Admin123!",
+    "phoneNumber": "+84123456789",
+    "birthDate": "1990-01-01",
+    "isAdmin": true
+}
+
+### Login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+    "email": "admin@example.com",
+    "password": "Admin123!"
+}
+
+### Get Current User Profile
+GET {{baseUrl}}/auth/profile
+Authorization: Bearer your-jwt-token-here
+
+### Change Password
+POST {{baseUrl}}/auth/change-password
+Authorization: Bearer your-jwt-token-here
+Content-Type: application/json
+
+{
+    "currentPassword": "Admin123!",
+    "newPassword": "NewAdmin123!"
+}
+
